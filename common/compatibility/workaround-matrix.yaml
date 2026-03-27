@@ -1,0 +1,111 @@
+schema_version: "1.0"
+approved_workaround_classes:
+  - native_mapping
+  - generated_wrapper
+  - external_runner
+  - protocol_downgrade
+
+hazard_workarounds:
+  - hazard_category: model_tiers
+    canonical_feature: execution.model_profile
+    workaround_class: native_mapping
+    trigger_condition: "Source tier names are provider-specific instead of canonical profile identifiers."
+    recommended_fallback: "Map to canonical profiles: strategic_high/quality_mid/delivery_balanced/utility_fast."
+    warning_code: W_MODEL_PROFILE_NORMALIZED
+    applies_to:
+      - opencode
+      - codex
+      - openclaw
+
+  - hazard_category: interactive_capture
+    canonical_feature: capabilities.input_capture_mode
+    workaround_class: generated_wrapper
+    trigger_condition: "Interactive decision capture is required but no native capture primitive exists."
+    recommended_fallback: "Generate wrapper prompts and response parser with deterministic option labels."
+    warning_code: W_INTERACTIVE_CAPTURE_WRAPPED
+    applies_to:
+      - codex
+      - openclaw
+
+  - hazard_category: slash_commands
+    canonical_feature: skill.invocation
+    workaround_class: protocol_downgrade
+    trigger_condition: "Slash-style invocation surface is unavailable or not stable."
+    recommended_fallback: "Expose command intent through explicit task/command entrypoints."
+    warning_code: W_SLASH_COMMAND_ROUTED
+    applies_to:
+      - codex
+      - openclaw
+
+  - hazard_category: hook_event_semantics
+    canonical_feature: policy.enforcement
+    workaround_class: external_runner
+    trigger_condition: "Lifecycle hook names and matchers differ from canonical enforcement phases."
+    recommended_fallback: "Route hook-driven enforcement through an explicit external runner that preserves the canonical validation boundary."
+    warning_code: W_HOOK_EVENT_DOWNGRADED
+    applies_to:
+      - codex
+      - openclaw
+
+  - hazard_category: permissions
+    canonical_feature: policy.rules
+    workaround_class: native_mapping
+    trigger_condition: "Permission syntax differs while intent can still be represented canonically."
+    recommended_fallback: "Normalize allow/deny intent into canonical policy rule entries."
+    warning_code: W_PERMISSION_POLICY_TRANSLATED
+    applies_to:
+      - opencode
+      - codex
+      - openclaw
+
+  - hazard_category: orchestration_assumptions
+    canonical_feature: workflow.stages
+    workaround_class: protocol_downgrade
+    trigger_condition: "Assumed orchestrator behavior is unavailable as a native runtime primitive."
+    recommended_fallback: "Represent orchestration as explicit staged workflow transitions."
+    warning_code: W_ORCHESTRATION_ASSUMPTION_SHIFT
+    applies_to:
+      - codex
+      - openclaw
+
+  - hazard_category: skill_references
+    canonical_feature: agent.skills
+    workaround_class: native_mapping
+    trigger_condition: "Skill references require identifier normalization between platforms."
+    recommended_fallback: "Map skill ids directly and preserve one-to-one reference semantics."
+    warning_code: W_SKILL_REFERENCE_RESCOPED
+    applies_to:
+      - opencode
+      - codex
+      - openclaw
+
+  - hazard_category: approval_before_write_protocol
+    canonical_feature: workflow.invariants.approval_before_write
+    workaround_class: native_mapping
+    trigger_condition: "Source flow requires explicit user approval before any write operation."
+    recommended_fallback: "Enforce approval gate before_write in canonical workflow stages."
+    warning_code: W_APPROVAL_PROTOCOL_ENFORCED
+    applies_to:
+      - opencode
+      - codex
+      - openclaw
+
+  - hazard_category: skill_metadata
+    canonical_feature: skill.tool_contract
+    workaround_class: generated_wrapper
+    trigger_condition: "Skill metadata fields do not align with target manifest shape."
+    recommended_fallback: "Generate adapter metadata while preserving invocation intent."
+    warning_code: W_SKILL_METADATA_RESHAPED
+    applies_to:
+      - codex
+      - openclaw
+
+  - hazard_category: task_subcall_delegation
+    canonical_feature: capabilities.delegation_mode
+    workaround_class: protocol_downgrade
+    trigger_condition: "Task/subcall delegation assumptions exceed target runtime guarantees."
+    recommended_fallback: "Downgrade to explicit single-step delegation with surfaced checkpoints."
+    warning_code: W_TASK_DELEGATION_BRIDGED
+    applies_to:
+      - codex
+      - openclaw

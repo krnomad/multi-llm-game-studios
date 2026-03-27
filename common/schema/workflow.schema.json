@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://game-studios.local/schema/workflow.schema.json",
+  "title": "Canonical Workflow Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "id",
+    "summary",
+    "stages",
+    "invariants"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^1\\.0$"
+    },
+    "kind": {
+      "const": "workflow"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "stage_id",
+          "objective",
+          "actor",
+          "approval_gate",
+          "fallback_strategy"
+        ],
+        "properties": {
+          "stage_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$"
+          },
+          "objective": {
+            "type": "string",
+            "minLength": 1
+          },
+          "actor": {
+            "type": "string",
+            "enum": ["user", "agent", "system"]
+          },
+          "approval_gate": {
+            "type": "string",
+            "enum": ["none", "before_write", "before_execute", "before_publish"]
+          },
+          "fallback_strategy": {
+            "type": "string",
+            "enum": [
+              "native_mapping",
+              "generated_wrapper",
+              "external_runner",
+              "protocol_downgrade"
+            ]
+          }
+        }
+      }
+    },
+    "invariants": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approval_before_write", "human_decision_owner"],
+      "properties": {
+        "approval_before_write": {
+          "type": "boolean"
+        },
+        "human_decision_owner": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

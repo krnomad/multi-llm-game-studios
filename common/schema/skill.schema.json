@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://game-studios.local/schema/skill.schema.json",
+  "title": "Canonical Skill Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "user_entrypoint",
+    "intent",
+    "required_inputs",
+    "interactive_capture_mode",
+    "workflow_steps",
+    "required_capabilities",
+    "outputs",
+    "source_refs",
+    "workaround_rules",
+    "projection_notes"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^1\\.0$"
+    },
+    "kind": {
+      "const": "skill"
+    },
+    "user_entrypoint": {
+      "type": "string",
+      "minLength": 1
+    },
+    "intent": {
+      "type": "string",
+      "minLength": 1
+    },
+    "required_inputs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "interactive_capture_mode": {
+      "type": "string",
+      "enum": [
+        "none",
+        "structured_choice",
+        "freeform_prompt",
+        "hybrid"
+      ]
+    },
+    "workflow_steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["step_id", "intent", "requires_confirmation"],
+        "properties": {
+          "step_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$"
+          },
+          "intent": {
+            "type": "string",
+            "minLength": 1
+          },
+          "requires_confirmation": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "required_capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9_]+$"
+      },
+      "uniqueItems": true
+    },
+    "outputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "source_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "workaround_rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "hazard_category",
+          "workaround_class",
+          "warning_code"
+        ],
+        "properties": {
+          "hazard_category": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$"
+          },
+          "workaround_class": {
+            "type": "string",
+            "enum": [
+              "native_mapping",
+              "generated_wrapper",
+              "external_runner",
+              "protocol_downgrade"
+            ]
+          },
+          "warning_code": {
+            "type": "string",
+            "pattern": "^W_[A-Z0-9_]+$"
+          }
+        }
+      }
+    },
+    "projection_notes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["target", "note", "workaround_class"],
+        "properties": {
+          "target": {
+            "type": "string",
+            "enum": ["opencode", "codex", "openclaw"]
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1
+          },
+          "workaround_class": {
+            "type": "string",
+            "enum": [
+              "native_mapping",
+              "generated_wrapper",
+              "external_runner",
+              "protocol_downgrade"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

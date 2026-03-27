@@ -1,0 +1,72 @@
+schema_version: "1.0"
+support_posture:
+  opencode: highest_fidelity_v0_target
+  codex: supported_with_workarounds
+  openclaw: repo_cli_compatibility_only
+
+platforms:
+  - id: opencode
+    posture: highest_fidelity_v0_target
+    notes:
+      - "Primary projection target for v0 semantics."
+      - "Native mapping preferred unless policy constraints require wrappers."
+    features:
+      - feature_id: agent_manifests
+        support: native
+        workaround_class: native_mapping
+      - feature_id: skill_manifests
+        support: native
+        workaround_class: native_mapping
+      - feature_id: policy_guards
+        support: native
+        workaround_class: native_mapping
+      - feature_id: workflow_approval_gates
+        support: native
+        workaround_class: native_mapping
+      - feature_id: delegation_subcalls
+        support: native
+        workaround_class: native_mapping
+
+  - id: codex
+    posture: supported_with_workarounds
+    limitations:
+      - code: W_CODEX_PROJECT_LOCAL_AGENT_LIMITATION
+        condition: "Project-local custom agents are not a reliable native loading surface."
+        fallback: "Emit generated install wrapper for globally discoverable agent registration."
+    features:
+      - feature_id: agent_manifests
+        support: partial
+        workaround_class: generated_wrapper
+      - feature_id: skill_manifests
+        support: partial
+        workaround_class: generated_wrapper
+      - feature_id: policy_guards
+        support: partial
+        workaround_class: external_runner
+      - feature_id: workflow_approval_gates
+        support: partial
+        workaround_class: native_mapping
+      - feature_id: delegation_subcalls
+        support: partial
+        workaround_class: protocol_downgrade
+
+  - id: openclaw
+    posture: repo_cli_compatibility_only
+    notes:
+      - "v0 target is repository and CLI compatibility, not channel-native parity."
+    features:
+      - feature_id: agent_manifests
+        support: cli_projection
+        workaround_class: protocol_downgrade
+      - feature_id: skill_manifests
+        support: cli_projection
+        workaround_class: protocol_downgrade
+      - feature_id: policy_guards
+        support: externalized
+        workaround_class: external_runner
+      - feature_id: workflow_approval_gates
+        support: externalized
+        workaround_class: external_runner
+      - feature_id: delegation_subcalls
+        support: cli_projection
+        workaround_class: protocol_downgrade

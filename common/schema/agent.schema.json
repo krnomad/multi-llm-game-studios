@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://game-studios.local/schema/agent.schema.json",
+  "title": "Canonical Agent Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "purpose",
+    "collaboration_contract_ref",
+    "capabilities",
+    "model_profile",
+    "tool_capability_needs",
+    "delegation_intent",
+    "source_refs",
+    "projection_notes",
+    "warning_rules"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^1\\.0$"
+    },
+    "kind": {
+      "const": "agent"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1
+    },
+    "collaboration_contract_ref": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$"
+    },
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9_]+$"
+      },
+      "uniqueItems": true
+    },
+    "model_profile": {
+      "type": "string",
+      "enum": [
+        "strategic_high",
+        "quality_mid",
+        "delivery_balanced",
+        "utility_fast"
+      ]
+    },
+    "tool_capability_needs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9_]+$"
+      },
+      "uniqueItems": true
+    },
+    "delegation_intent": {
+      "type": "string",
+      "enum": ["none", "single_delegate", "multi_delegate"]
+    },
+    "source_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "projection_notes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["target", "note", "workaround_class"],
+        "properties": {
+          "target": {
+            "type": "string",
+            "enum": ["opencode", "codex", "openclaw"]
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1
+          },
+          "workaround_class": {
+            "type": "string",
+            "enum": [
+              "native_mapping",
+              "generated_wrapper",
+              "external_runner",
+              "protocol_downgrade"
+            ]
+          }
+        }
+      }
+    },
+    "warning_rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "trigger_condition", "recommended_fallback"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^W_[A-Z0-9_]+$"
+          },
+          "trigger_condition": {
+            "type": "string",
+            "minLength": 1
+          },
+          "recommended_fallback": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "uniqueItems": true
+    }
+  }
+}

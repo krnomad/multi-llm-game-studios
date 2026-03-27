@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://game-studios.local/schema/policy.schema.json",
+  "title": "Canonical Policy Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "id",
+    "title",
+    "enforcement",
+    "rules"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^1\\.0$"
+    },
+    "kind": {
+      "const": "policy"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "enforcement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "applies_to"],
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": ["advisory", "required", "blocking"]
+        },
+        "applies_to": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["agent", "skill", "workflow", "runtime"]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "statement", "severity", "failure_mode"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^POL_[A-Z0-9_]+$"
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["info", "warning", "error"]
+          },
+          "failure_mode": {
+            "type": "string",
+            "enum": ["warn", "block", "fallback"]
+          }
+        }
+      }
+    }
+  }
+}

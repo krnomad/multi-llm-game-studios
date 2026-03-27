@@ -1,0 +1,83 @@
+schema_version: "1.0"
+allowed_severity:
+  - info
+  - warning
+  - error
+
+warnings:
+  - code: W_MODEL_PROFILE_NORMALIZED
+    severity: info
+    warning_class: compatibility_mapping
+    trigger_condition: "Provider model tier labels are detected and replaced with canonical model profiles."
+    recommended_fallback: "Persist canonical model_profile values in manifests and projected outputs."
+    workaround_class: native_mapping
+
+  - code: W_INTERACTIVE_CAPTURE_WRAPPED
+    severity: warning
+    warning_class: interaction_surface
+    trigger_condition: "Interactive decision capture is requested without native capture support."
+    recommended_fallback: "Use generated wrapper prompts plus deterministic option parsing."
+    workaround_class: generated_wrapper
+
+  - code: W_SLASH_COMMAND_ROUTED
+    severity: warning
+    warning_class: invocation_surface
+    trigger_condition: "Slash command invocation is unavailable on the target platform."
+    recommended_fallback: "Route invocation through explicit command/task entrypoints."
+    workaround_class: protocol_downgrade
+
+  - code: W_HOOK_EVENT_DOWNGRADED
+    severity: warning
+    warning_class: lifecycle_semantics
+    trigger_condition: "Source lifecycle hooks cannot be mapped one-to-one to target runtime events."
+    recommended_fallback: "Route lifecycle enforcement through an explicit external runner instead of pretending native hook parity."
+    workaround_class: external_runner
+
+  - code: W_PERMISSION_POLICY_TRANSLATED
+    severity: info
+    warning_class: policy_translation
+    trigger_condition: "Permission patterns differ in syntax but can be translated as canonical policy intent."
+    recommended_fallback: "Emit canonical allow/deny policy rules and preserve intent-level semantics."
+    workaround_class: native_mapping
+
+  - code: W_ORCHESTRATION_ASSUMPTION_SHIFT
+    severity: warning
+    warning_class: orchestration_runtime
+    trigger_condition: "Implicit orchestration assumptions are unsupported or unstable on target runtime."
+    recommended_fallback: "Project orchestration into explicit workflow stages and approval checkpoints."
+    workaround_class: protocol_downgrade
+
+  - code: W_SKILL_REFERENCE_RESCOPED
+    severity: info
+    warning_class: reference_integrity
+    trigger_condition: "Skill references require id normalization to satisfy canonical naming constraints."
+    recommended_fallback: "Preserve one-to-one skill ids after canonical normalization."
+    workaround_class: native_mapping
+
+  - code: W_APPROVAL_PROTOCOL_ENFORCED
+    severity: info
+    warning_class: workflow_safety
+    trigger_condition: "Source protocol mandates approval before write actions."
+    recommended_fallback: "Set workflow approval gate to before_write and block violations."
+    workaround_class: native_mapping
+
+  - code: W_SKILL_METADATA_RESHAPED
+    severity: warning
+    warning_class: metadata_projection
+    trigger_condition: "Skill metadata fields require restructuring to match target schema contracts."
+    recommended_fallback: "Generate metadata wrapper while preserving invocation and phase semantics."
+    workaround_class: generated_wrapper
+
+  - code: W_TASK_DELEGATION_BRIDGED
+    severity: warning
+    warning_class: delegation_runtime
+    trigger_condition: "Nested task/subcall delegation exceeds target runtime guarantees."
+    recommended_fallback: "Downgrade to explicit staged delegation and surface control points."
+    workaround_class: protocol_downgrade
+
+  - code: W_CODEX_PROJECT_LOCAL_AGENT_LIMITATION
+    severity: warning
+    warning_class: platform_limitation
+    trigger_condition: "Codex project-local custom agents are not reliable as a native loading target."
+    recommended_fallback: "Generate and document global-agent install wrapper for deterministic behavior."
+    workaround_class: generated_wrapper
