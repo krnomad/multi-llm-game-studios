@@ -1,0 +1,81 @@
+schema_version: "1.0"
+kind: skill
+id: setup-engine
+user_entrypoint: setup-engine
+intent: >-
+  Select or confirm engine and version, draft technical defaults, classify
+  knowledge-gap risk, and produce version-aware references with approval before
+  persistence.
+required_inputs:
+  - engine_choice_or_guided_mode
+  - target_version
+  - project_constraints
+interactive_capture_mode: hybrid
+workflow_steps:
+  - step_id: parse_mode
+    intent: Determine explicit-input, engine-only, guided, or refresh mode.
+    requires_confirmation: false
+  - step_id: choose_engine
+    intent: Gather constraints, recommend options, and capture user engine choice.
+    requires_confirmation: true
+  - step_id: resolve_version
+    intent: Confirm selected version from user input or current stable references.
+    requires_confirmation: true
+  - step_id: draft_configuration_changes
+    intent: Prepare project configuration updates and show planned edits before writes.
+    requires_confirmation: true
+  - step_id: draft_technical_preferences
+    intent: Generate engine defaults and request approval before persistence.
+    requires_confirmation: true
+  - step_id: classify_knowledge_risk
+    intent: Classify low, medium, or high version-risk against trusted baseline.
+    requires_confirmation: false
+  - step_id: produce_reference_docs
+    intent: Create minimal or full version-pinned references based on risk level.
+    requires_confirmation: true
+  - step_id: summarize_handoff
+    intent: Output setup summary and ordered downstream next-step guidance.
+    requires_confirmation: false
+required_capabilities:
+  - read
+  - glob
+  - grep
+  - write
+  - edit
+  - web_lookup
+  - fetch_url
+  - staged_delegation
+  - user_prompt_capture
+  - structured_output
+outputs:
+  - pinned_engine_configuration
+  - approved_technical_preferences
+  - knowledge_risk_classification
+  - engine_reference_artifacts
+source_refs:
+  - Claude-Code-Game-Studios/.claude/skills/setup-engine/SKILL.md
+  - common/docs/workflows/engine-setup.md
+  - common/docs/workflows/validation-intent.md
+workaround_rules:
+  - hazard_category: task_subcall_delegation
+    workaround_class: protocol_downgrade
+    warning_code: W_TASK_DELEGATION_BRIDGED
+  - hazard_category: slash_commands
+    workaround_class: protocol_downgrade
+    warning_code: W_SLASH_COMMAND_ROUTED
+  - hazard_category: skill_metadata
+    workaround_class: generated_wrapper
+    warning_code: W_SKILL_METADATA_RESHAPED
+  - hazard_category: approval_before_write_protocol
+    workaround_class: native_mapping
+    warning_code: W_APPROVAL_PROTOCOL_ENFORCED
+projection_notes:
+  - target: opencode
+    note: Map setup flow directly while preserving explicit user approval before writes.
+    workaround_class: native_mapping
+  - target: codex
+    note: Downgrade deep delegation assumptions to explicit staged checkpoints.
+    workaround_class: protocol_downgrade
+  - target: openclaw
+    note: Use wrapper metadata for setup-stage prompts and version verification notes.
+    workaround_class: generated_wrapper

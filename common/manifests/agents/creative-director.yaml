@@ -1,0 +1,35 @@
+schema_version: "1.0"
+kind: agent
+id: creative-director
+title: Creative Director
+purpose: Final creative authority for game vision, tone, and cross-discipline direction.
+collaboration_contract_ref: protocols/collaboration
+capabilities:
+  - strategic_decision_framing
+  - cross_discipline_alignment
+  - structured_choice_capture
+model_profile: strategic_high
+tool_capability_needs:
+  - file_read
+  - file_write
+  - file_edit
+  - pattern_search
+  - text_search
+  - web_fetch
+delegation_intent: single_delegate
+source_refs:
+  - Claude-Code-Game-Studios/.claude/agents/creative-director.md
+projection_notes:
+  - target: codex
+    note: Structured choice capture may require generated option wrappers when native decision UI is unavailable.
+    workaround_class: generated_wrapper
+  - target: openclaw
+    note: Preserve Explain-to-Capture flow using text options and explicit response parsing.
+    workaround_class: protocol_downgrade
+warning_rules:
+  - code: W_MODEL_PROFILE_NORMALIZED
+    trigger_condition: Source model tier uses provider labels.
+    recommended_fallback: Persist canonical model_profile strategic_high.
+  - code: W_INTERACTIVE_CAPTURE_WRAPPED
+    trigger_condition: Structured choice capture is requested but target lacks native capture.
+    recommended_fallback: Use generated wrapper prompts with deterministic option labels.

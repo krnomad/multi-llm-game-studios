@@ -1,0 +1,41 @@
+schema_version: "1.0"
+kind: policy
+id: test-standards
+title: Test Standards
+enforcement:
+  level: required
+  applies_to:
+    - agent
+    - workflow
+    - runtime
+rules:
+  - code: POL_TEST_NAMES_ARE_DESCRIPTIVE
+    statement: >-
+      Tests should use descriptive names that encode the system, scenario, and expected result so failures remain readable and reviewable.
+    severity: warning
+    failure_mode: warn
+  - code: POL_TESTS_USE_CLEAR_STRUCTURE
+    statement: >-
+      Tests should make setup, execution, and assertion steps explicit so intent is inspectable and regressions are easy to diagnose.
+    severity: warning
+    failure_mode: warn
+  - code: POL_UNIT_TESTS_ARE_DETERMINISTIC
+    statement: >-
+      Unit tests must not depend on uncontrolled external state such as filesystem, network, database, or shared mutable data; external dependencies should be mocked so checks stay fast and deterministic.
+    severity: error
+    failure_mode: block
+  - code: POL_INTEGRATION_TESTS_CLEAN_UP
+    statement: >-
+      Integration tests must clean up resources they create so repeated runs produce the same outcome and do not poison later validation cycles.
+    severity: error
+    failure_mode: block
+  - code: POL_PERFORMANCE_TESTS_DECLARE_THRESHOLDS
+    statement: >-
+      Performance tests must state an acceptable threshold and fail when the measured result exceeds it so performance regressions are objective.
+    severity: error
+    failure_mode: block
+  - code: POL_BUG_FIXES_INCLUDE_REGRESSION_TESTS
+    statement: >-
+      A bug fix should include a regression test that would have caught the original failure, preserving the validation signal across future changes even if the target runner executes tests via external_runner fallback.
+    severity: warning
+    failure_mode: fallback

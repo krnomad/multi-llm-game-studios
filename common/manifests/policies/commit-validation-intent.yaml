@@ -1,0 +1,30 @@
+schema_version: "1.0"
+kind: policy
+id: commit-validation-intent
+title: Commit Validation Intent
+enforcement:
+  level: blocking
+  applies_to:
+    - workflow
+    - runtime
+rules:
+  - code: POL_VALIDATE_DESIGN_DOC_COMPLETENESS
+    statement: >-
+      Before a commit-equivalent approval boundary, changed design documents must be checked for required sections such as Overview, Player Fantasy, Detailed Rules, Formulas, Edge Cases, Dependencies, Tuning Knobs, and Acceptance Criteria; when native lifecycle hooks are unavailable, preserve this intent through protocol_downgrade into canonical pre-commit validation stages rather than dropping the check.
+    severity: warning
+    failure_mode: warn
+  - code: POL_VALIDATE_STRUCTURED_DATA_INTEGRITY
+    statement: >-
+      Machine-readable project data must be syntactically valid before the commit-equivalent action proceeds; invalid structured data blocks progression, and runtimes without native commit interception must run the validation through an external_runner so the blocking guarantee remains explicit.
+    severity: error
+    failure_mode: block
+  - code: POL_WARN_ON_ACTIONABLE_CODE_QUALITY_SIGNALS
+    statement: >-
+      Implementation changes should surface actionable warnings for obvious anti-patterns such as unowned TODO or FIXME markers and hardcoded gameplay balance values that belong in data, with warnings preserved even when enforcement is routed through protocol_downgrade or external_runner fallback paths.
+    severity: warning
+    failure_mode: warn
+  - code: POL_REQUIRE_VISIBLE_FALLBACK_HANDLING
+    statement: >-
+      If a target runtime cannot express native pre-commit validation hooks, the harness must route commit-validation intent to external_runner or protocol_downgrade handling and must not silently omit the validation boundary.
+    severity: error
+    failure_mode: fallback

@@ -1,0 +1,57 @@
+schema_version: "1.0"
+kind: skill
+id: start
+user_entrypoint: start
+intent: >-
+  Guide early-session onboarding by detecting project state, collecting the
+  user's current starting point, routing to an appropriate next workflow, and
+  requiring explicit user choice before handoff.
+required_inputs:
+  - user_starting_point
+interactive_capture_mode: structured_choice
+workflow_steps:
+  - step_id: detect_state
+    intent: Silently inspect project context to tailor onboarding recommendations.
+    requires_confirmation: false
+  - step_id: capture_starting_point
+    intent: Present starting-point options and capture the user's self-assessment.
+    requires_confirmation: true
+  - step_id: route_path
+    intent: Produce a recommended workflow path based on user input and detected state.
+    requires_confirmation: false
+  - step_id: confirm_next_step
+    intent: Confirm user-selected next action before handoff and avoid auto-execution.
+    requires_confirmation: true
+required_capabilities:
+  - read
+  - glob
+  - grep
+  - user_prompt_capture
+  - structured_output
+outputs:
+  - selected_next_action
+  - routed_workflow_path
+  - onboarding_rationale
+source_refs:
+  - Claude-Code-Game-Studios/.claude/skills/start/SKILL.md
+  - common/docs/workflows/onboarding.md
+workaround_rules:
+  - hazard_category: interactive_capture
+    workaround_class: generated_wrapper
+    warning_code: W_INTERACTIVE_CAPTURE_WRAPPED
+  - hazard_category: slash_commands
+    workaround_class: protocol_downgrade
+    warning_code: W_SLASH_COMMAND_ROUTED
+  - hazard_category: approval_before_write_protocol
+    workaround_class: native_mapping
+    warning_code: W_APPROVAL_PROTOCOL_ENFORCED
+projection_notes:
+  - target: opencode
+    note: Preserve structured onboarding choices through native prompt interactions.
+    workaround_class: native_mapping
+  - target: codex
+    note: Route command intent through explicit task entrypoints and wrapped choice prompts.
+    workaround_class: protocol_downgrade
+  - target: openclaw
+    note: Use wrapper-based structured choices in repo or CLI interaction surfaces.
+    workaround_class: generated_wrapper

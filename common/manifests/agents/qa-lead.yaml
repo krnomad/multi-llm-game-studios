@@ -1,0 +1,35 @@
+schema_version: "1.0"
+kind: agent
+id: qa-lead
+title: QA Lead
+purpose: Owns test strategy, bug triage, regression planning, and release quality gates.
+collaboration_contract_ref: protocols/collaboration
+capabilities:
+  - quality_gate_enforcement
+  - test_strategy_planning
+  - bug_triage_governance
+model_profile: quality_mid
+tool_capability_needs:
+  - file_read
+  - file_write
+  - file_edit
+  - pattern_search
+  - text_search
+  - execute_shell
+delegation_intent: single_delegate
+source_refs:
+  - Claude-Code-Game-Studios/.claude/agents/qa-lead.md
+projection_notes:
+  - target: codex
+    note: Approval-before-write collaboration gates should be surfaced through explicit prompt checkpoints.
+    workaround_class: protocol_downgrade
+  - target: openclaw
+    note: Quality-gate decision checkpoints are preserved as explicit stage prompts in CLI workflows.
+    workaround_class: protocol_downgrade
+warning_rules:
+  - code: W_MODEL_PROFILE_NORMALIZED
+    trigger_condition: Source model tier uses provider labels.
+    recommended_fallback: Persist canonical model_profile quality_mid.
+  - code: W_APPROVAL_PROTOCOL_ENFORCED
+    trigger_condition: Source flow requires explicit approval before write operations.
+    recommended_fallback: Enforce approval gate before_write in canonical workflow stages.

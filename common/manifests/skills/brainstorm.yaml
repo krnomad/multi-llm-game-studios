@@ -1,0 +1,71 @@
+schema_version: "1.0"
+kind: skill
+id: brainstorm
+user_entrypoint: brainstorm
+intent: >-
+  Run collaborative game concept ideation from discovery through concept
+  selection, loop definition, pillar alignment, feasibility framing, and
+  approved concept persistence.
+required_inputs:
+  - optional_theme_hint
+  - player_preferences
+  - practical_constraints
+interactive_capture_mode: structured_choice
+workflow_steps:
+  - step_id: parse_context
+    intent: Parse optional ideation hint and load existing concept artifacts when present.
+    requires_confirmation: false
+  - step_id: creative_discovery
+    intent: Gather emotional goals, player taste, and practical constraints through guided questions.
+    requires_confirmation: true
+  - step_id: concept_generation
+    intent: Generate distinct concept options and capture a selected or merged direction.
+    requires_confirmation: true
+  - step_id: loop_and_pillars
+    intent: Define core loops, pillars, anti-pillars, and target player motivations.
+    requires_confirmation: true
+  - step_id: feasibility_alignment
+    intent: Recommend engine and scope tiers with explicit risks and MVP boundaries.
+    requires_confirmation: true
+  - step_id: persist_concept
+    intent: Draft and save concept documentation only after explicit user confirmation.
+    requires_confirmation: true
+  - step_id: propose_next_steps
+    intent: Output ordered downstream recommendations for setup, review, decomposition, and planning.
+    requires_confirmation: false
+required_capabilities:
+  - read
+  - glob
+  - grep
+  - write
+  - user_prompt_capture
+  - structured_output
+outputs:
+  - chosen_concept_direction
+  - concept_pillars
+  - engine_recommendation
+  - concept_document_path
+source_refs:
+  - Claude-Code-Game-Studios/.claude/skills/brainstorm/SKILL.md
+  - common/docs/workflows/onboarding.md
+  - common/docs/workflows/engine-setup.md
+workaround_rules:
+  - hazard_category: interactive_capture
+    workaround_class: generated_wrapper
+    warning_code: W_INTERACTIVE_CAPTURE_WRAPPED
+  - hazard_category: slash_commands
+    workaround_class: protocol_downgrade
+    warning_code: W_SLASH_COMMAND_ROUTED
+  - hazard_category: skill_metadata
+    workaround_class: generated_wrapper
+    warning_code: W_SKILL_METADATA_RESHAPED
+projection_notes:
+  - target: opencode
+    note: Keep interactive concept choices native while preserving stepwise approvals.
+    workaround_class: native_mapping
+  - target: codex
+    note: Encode option selection as deterministic wrapper prompts with explicit labels.
+    workaround_class: generated_wrapper
+  - target: openclaw
+    note: Project guided ideation choices through protocol-downgraded task entrypoints.
+    workaround_class: protocol_downgrade

@@ -1,0 +1,54 @@
+schema_version: "1.0"
+kind: skill
+id: design-review
+user_entrypoint: design-review
+intent: >-
+  Perform read-only design quality review against completeness, consistency,
+  implementability, and verdict criteria, then return structured findings and
+  context-sensitive next-step recommendations without changing project files.
+required_inputs:
+  - target_design_doc_path
+interactive_capture_mode: none
+workflow_steps:
+  - step_id: load_review_inputs
+    intent: Read target document, standards context, and related dependency documents.
+    requires_confirmation: false
+  - step_id: evaluate_quality_dimensions
+    intent: Apply checklist, consistency, implementability, and cross-system checks.
+    requires_confirmation: false
+  - step_id: issue_verdict
+    intent: Produce structured findings and verdict while remaining read-only.
+    requires_confirmation: false
+  - step_id: recommend_next_action
+    intent: Provide context-sensitive guidance based on document type and verdict.
+    requires_confirmation: false
+required_capabilities:
+  - read
+  - glob
+  - grep
+  - structured_output
+outputs:
+  - design_review_report
+  - completeness_score
+  - verdict_classification
+  - prioritized_recommendations
+source_refs:
+  - Claude-Code-Game-Studios/.claude/skills/design-review/SKILL.md
+  - common/docs/workflows/design-review.md
+workaround_rules:
+  - hazard_category: slash_commands
+    workaround_class: protocol_downgrade
+    warning_code: W_SLASH_COMMAND_ROUTED
+  - hazard_category: skill_metadata
+    workaround_class: generated_wrapper
+    warning_code: W_SKILL_METADATA_RESHAPED
+projection_notes:
+  - target: opencode
+    note: Preserve read-only review output contract as a native analysis step.
+    workaround_class: native_mapping
+  - target: codex
+    note: Route invocation through explicit command intent while keeping report sections stable.
+    workaround_class: protocol_downgrade
+  - target: openclaw
+    note: Keep review read-only and emit structured report sections through wrapper formatting.
+    workaround_class: generated_wrapper

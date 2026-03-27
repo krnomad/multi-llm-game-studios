@@ -1,0 +1,33 @@
+schema_version: "1.0"
+kind: workflow
+id: collaboration-approval-gate
+summary: User-directed collaboration stages that preserve draft review and explicit approval before any write operation.
+stages:
+  - stage_id: question
+    objective: Ask for the missing context that materially affects the outcome.
+    actor: agent
+    approval_gate: none
+    fallback_strategy: native_mapping
+  - stage_id: options
+    objective: Present meaningful paths forward with concise tradeoffs so the user can compare choices.
+    actor: agent
+    approval_gate: none
+    fallback_strategy: generated_wrapper
+  - stage_id: decision
+    objective: Wait for the user to choose a direction and keep decision ownership with the human.
+    actor: user
+    approval_gate: none
+    fallback_strategy: generated_wrapper
+  - stage_id: draft
+    objective: Show the proposed content or faithful summary of the full changeset before any write occurs.
+    actor: agent
+    approval_gate: none
+    fallback_strategy: protocol_downgrade
+  - stage_id: approval
+    objective: Capture explicit approval for the pending writes before create or edit actions are executed.
+    actor: user
+    approval_gate: before_write
+    fallback_strategy: external_runner
+invariants:
+  approval_before_write: true
+  human_decision_owner: true
