@@ -1,0 +1,18 @@
+schema_version = "1.0"
+target = "codex"
+support_posture = "supported_with_workarounds"
+local_custom_agents_reliable = false
+global_agent_workaround_path = "adapters/codex/install/global-agents"
+global_agent_install_target = "~/.codex/agents/"
+structured_choice_strategy = "text_first_deterministic_options"
+
+[limitations]
+code = "W_CODEX_PROJECT_LOCAL_AGENT_LIMITATION"
+condition = "Project-local custom agents are not a reliable native loading surface."
+fallback = "Emit generated install wrapper for globally discoverable agent registration."
+
+[generated]
+agents = [".codex/agents/creative-director.toml", ".codex/agents/producer.toml", ".codex/agents/qa-lead.toml", ".codex/agents/technical-director.toml"]
+skills = [".agents/skills/brainstorm/SKILL.md", ".agents/skills/design-review/SKILL.md", ".agents/skills/setup-engine/SKILL.md", ".agents/skills/start/SKILL.md"]
+policies = ["commit-validation-intent", "test-standards"]
+workflows = ["collaboration-approval-gate"]

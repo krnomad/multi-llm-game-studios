@@ -1,0 +1,30 @@
+{
+  "agents": [
+    {
+      "id": "creative-director",
+      "source": "agents/creative-director.toml",
+      "title": "Creative Director"
+    },
+    {
+      "id": "producer",
+      "source": "agents/producer.toml",
+      "title": "Producer"
+    },
+    {
+      "id": "qa-lead",
+      "source": "agents/qa-lead.toml",
+      "title": "QA Lead"
+    },
+    {
+      "id": "technical-director",
+      "source": "agents/technical-director.toml",
+      "title": "Technical Director"
+    }
+  ],
+  "install_requires_global_scope": true,
+  "package_type": "global_agent_workaround",
+  "schema_version": "1.0",
+  "support_posture": "supported_with_workarounds",
+  "target": "codex",
+  "warning_code": "W_CODEX_PROJECT_LOCAL_AGENT_LIMITATION"
+}
