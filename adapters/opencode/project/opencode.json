@@ -1,0 +1,245 @@
+{
+  "schema_version": "1.0",
+  "target": "opencode",
+  "target_posture": "highest_fidelity_v0_target",
+  "instructions_file": "AGENTS.md",
+  "project_config_surface": "opencode.json",
+  "skills_directory": ".opencode/skills",
+  "commands_directory": ".opencode/commands",
+  "agents": [
+    {
+      "id": "creative-director",
+      "title": "Creative Director",
+      "model_profile": "strategic_high",
+      "delegation_intent": "single_delegate",
+      "tool_capability_needs": [
+        "file_read",
+        "file_write",
+        "file_edit",
+        "pattern_search",
+        "text_search",
+        "web_fetch"
+      ],
+      "source_manifest": "common/manifests/agents/creative-director.yaml"
+    },
+    {
+      "id": "technical-director",
+      "title": "Technical Director",
+      "model_profile": "strategic_high",
+      "delegation_intent": "single_delegate",
+      "tool_capability_needs": [
+        "file_read",
+        "file_write",
+        "file_edit",
+        "pattern_search",
+        "text_search",
+        "web_fetch",
+        "execute_shell"
+      ],
+      "source_manifest": "common/manifests/agents/technical-director.yaml"
+    },
+    {
+      "id": "producer",
+      "title": "Producer",
+      "model_profile": "strategic_high",
+      "delegation_intent": "multi_delegate",
+      "tool_capability_needs": [
+        "file_read",
+        "file_write",
+        "file_edit",
+        "pattern_search",
+        "text_search",
+        "web_fetch",
+        "execute_shell"
+      ],
+      "source_manifest": "common/manifests/agents/producer.yaml"
+    },
+    {
+      "id": "qa-lead",
+      "title": "QA Lead",
+      "model_profile": "quality_mid",
+      "delegation_intent": "single_delegate",
+      "tool_capability_needs": [
+        "file_read",
+        "file_write",
+        "file_edit",
+        "pattern_search",
+        "text_search",
+        "execute_shell"
+      ],
+      "source_manifest": "common/manifests/agents/qa-lead.yaml"
+    }
+  ],
+  "skills": [
+    {
+      "id": "start",
+      "entrypoint": "start",
+      "interactive_capture_mode": "structured_choice",
+      "path": ".opencode/skills/start/SKILL.md",
+      "command_alias": ".opencode/commands/start.md",
+      "required_capabilities": [
+        "read",
+        "glob",
+        "grep",
+        "user_prompt_capture",
+        "structured_output"
+      ],
+      "source_manifest": "common/manifests/skills/start.yaml"
+    },
+    {
+      "id": "brainstorm",
+      "entrypoint": "brainstorm",
+      "interactive_capture_mode": "structured_choice",
+      "path": ".opencode/skills/brainstorm/SKILL.md",
+      "command_alias": ".opencode/commands/brainstorm.md",
+      "required_capabilities": [
+        "read",
+        "glob",
+        "grep",
+        "write",
+        "user_prompt_capture",
+        "structured_output"
+      ],
+      "source_manifest": "common/manifests/skills/brainstorm.yaml"
+    },
+    {
+      "id": "setup-engine",
+      "entrypoint": "setup-engine",
+      "interactive_capture_mode": "hybrid",
+      "path": ".opencode/skills/setup-engine/SKILL.md",
+      "command_alias": ".opencode/commands/setup-engine.md",
+      "required_capabilities": [
+        "read",
+        "glob",
+        "grep",
+        "write",
+        "edit",
+        "web_lookup",
+        "fetch_url",
+        "staged_delegation",
+        "user_prompt_capture",
+        "structured_output"
+      ],
+      "source_manifest": "common/manifests/skills/setup-engine.yaml"
+    },
+    {
+      "id": "design-review",
+      "entrypoint": "design-review",
+      "interactive_capture_mode": "none",
+      "path": ".opencode/skills/design-review/SKILL.md",
+      "command_alias": ".opencode/commands/design-review.md",
+      "required_capabilities": [
+        "read",
+        "glob",
+        "grep",
+        "structured_output"
+      ],
+      "source_manifest": "common/manifests/skills/design-review.yaml"
+    }
+  ],
+  "shared_docs": [
+    {
+      "id": "collaboration-protocol",
+      "title": "Collaboration Protocol",
+      "source_path": "common/docs/protocols/collaboration.md"
+    },
+    {
+      "id": "onboarding",
+      "title": "Onboarding Workflow",
+      "source_path": "common/docs/workflows/onboarding.md"
+    },
+    {
+      "id": "engine-setup",
+      "title": "Engine Setup Workflow",
+      "source_path": "common/docs/workflows/engine-setup.md"
+    },
+    {
+      "id": "design-review-workflow",
+      "title": "Design Review Workflow",
+      "source_path": "common/docs/workflows/design-review.md"
+    }
+  ],
+  "policies": [
+    {
+      "id": "commit-validation-intent",
+      "title": "Commit Validation Intent",
+      "enforcement": {
+        "level": "blocking",
+        "applies_to": [
+          "workflow",
+          "runtime"
+        ]
+      },
+      "rule_codes": [
+        "POL_VALIDATE_DESIGN_DOC_COMPLETENESS",
+        "POL_VALIDATE_STRUCTURED_DATA_INTEGRITY",
+        "POL_WARN_ON_ACTIONABLE_CODE_QUALITY_SIGNALS",
+        "POL_REQUIRE_VISIBLE_FALLBACK_HANDLING"
+      ]
+    },
+    {
+      "id": "test-standards",
+      "title": "Test Standards",
+      "enforcement": {
+        "level": "required",
+        "applies_to": [
+          "agent",
+          "workflow",
+          "runtime"
+        ]
+      },
+      "rule_codes": [
+        "POL_TEST_NAMES_ARE_DESCRIPTIVE",
+        "POL_TESTS_USE_CLEAR_STRUCTURE",
+        "POL_UNIT_TESTS_ARE_DETERMINISTIC",
+        "POL_INTEGRATION_TESTS_CLEAN_UP",
+        "POL_PERFORMANCE_TESTS_DECLARE_THRESHOLDS",
+        "POL_BUG_FIXES_INCLUDE_REGRESSION_TESTS"
+      ]
+    }
+  ],
+  "workflow": {
+    "id": "collaboration-approval-gate",
+    "stages": [
+      {
+        "stage_id": "question",
+        "objective": "Ask for the missing context that materially affects the outcome.",
+        "actor": "agent",
+        "approval_gate": "none",
+        "fallback_strategy": "native_mapping"
+      },
+      {
+        "stage_id": "options",
+        "objective": "Present meaningful paths forward with concise tradeoffs so the user can compare choices.",
+        "actor": "agent",
+        "approval_gate": "none",
+        "fallback_strategy": "generated_wrapper"
+      },
+      {
+        "stage_id": "decision",
+        "objective": "Wait for the user to choose a direction and keep decision ownership with the human.",
+        "actor": "user",
+        "approval_gate": "none",
+        "fallback_strategy": "generated_wrapper"
+      },
+      {
+        "stage_id": "draft",
+        "objective": "Show the proposed content or faithful summary of the full changeset before any write occurs.",
+        "actor": "agent",
+        "approval_gate": "none",
+        "fallback_strategy": "protocol_downgrade"
+      },
+      {
+        "stage_id": "approval",
+        "objective": "Capture explicit approval for the pending writes before create or edit actions are executed.",
+        "actor": "user",
+        "approval_gate": "before_write",
+        "fallback_strategy": "external_runner"
+      }
+    ],
+    "invariants": {
+      "approval_before_write": true,
+      "human_decision_owner": true
+    }
+  }
+}
