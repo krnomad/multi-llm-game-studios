@@ -1,0 +1,102 @@
+{
+  "external_runner": {
+    "policies": [
+      "commit-validation-intent",
+      "test-standards"
+    ],
+    "workflows": [
+      "collaboration-approval-gate"
+    ]
+  },
+  "fallback_contract": {
+    "delegation": "single_step_or_staged_cli_checkpoint",
+    "interactive_capture": "generated_wrapper_or_explicit_cli_prompts",
+    "policy_guards": "external_runner_metadata",
+    "slash_invocation": "explicit_command_or_task_entrypoint",
+    "workflow_approval_gates": "external_runner_metadata"
+  },
+  "features": [
+    {
+      "feature_id": "agent_manifests",
+      "support": "cli_projection",
+      "workaround_class": "protocol_downgrade"
+    },
+    {
+      "feature_id": "skill_manifests",
+      "support": "cli_projection",
+      "workaround_class": "protocol_downgrade"
+    },
+    {
+      "feature_id": "policy_guards",
+      "support": "externalized",
+      "workaround_class": "external_runner"
+    },
+    {
+      "feature_id": "workflow_approval_gates",
+      "support": "externalized",
+      "workaround_class": "external_runner"
+    },
+    {
+      "feature_id": "delegation_subcalls",
+      "support": "cli_projection",
+      "workaround_class": "protocol_downgrade"
+    }
+  ],
+  "native_parity": "not_supported_in_v0",
+  "platform": "openclaw",
+  "schema_version": "1.0",
+  "support_posture": "repo_cli_compatibility_only",
+  "supported_surfaces": [
+    "repository_layout",
+    "cli_invocation"
+  ],
+  "unsupported_surfaces": [
+    "gateway_integration",
+    "channel_native_runtime",
+    "runtime_hook_parity"
+  ],
+  "warning_codes": [
+    "W_APPROVAL_PROTOCOL_ENFORCED",
+    "W_HOOK_EVENT_DOWNGRADED",
+    "W_INTERACTIVE_CAPTURE_WRAPPED",
+    "W_MODEL_PROFILE_NORMALIZED",
+    "W_ORCHESTRATION_ASSUMPTION_SHIFT",
+    "W_PERMISSION_POLICY_TRANSLATED",
+    "W_SKILL_METADATA_RESHAPED",
+    "W_SKILL_REFERENCE_RESCOPED",
+    "W_SLASH_COMMAND_ROUTED",
+    "W_TASK_DELEGATION_BRIDGED"
+  ],
+  "workspace_entrypoints": {
+    "agents_index": "workspace/AGENTS.md",
+    "soul": "workspace/SOUL.md"
+  },
+  "workspace_inventory": {
+    "agents": [
+      "workspace/agents/creative-director.md",
+      "workspace/agents/producer.md",
+      "workspace/agents/qa-lead.md",
+      "workspace/agents/technical-director.md"
+    ],
+    "docs": [
+      "workspace/docs/protocols/collaboration.md",
+      "workspace/docs/workflows/onboarding.md",
+      "workspace/docs/workflows/engine-setup.md",
+      "workspace/docs/workflows/design-review.md"
+    ],
+    "policies": [
+      "workspace/policies/commit-validation-intent.md",
+      "workspace/policies/test-standards.md"
+    ],
+    "skills": [
+      "workspace/skills/brainstorm/SKILL.md",
+      "workspace/skills/design-review/SKILL.md",
+      "workspace/skills/setup-engine/SKILL.md",
+      "workspace/skills/start/SKILL.md"
+    ],
+    "workflows": [
+      "workspace/workflows/collaboration-approval-gate.md"
+    ]
+  },
+  "workspace_root": "workspace"
+}
